@@ -4,9 +4,41 @@
 <div class="u-vCenter">
     <p>Here is your shortened link</p>
     <input
-        class="u-wideField"
+        class="u-wideField js-toCopy"
         readonly
         value="{{ url('redirect', {'slug': redirect.slug}) }}"
     />
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+(function() {
+    let url_field
+    let button
+
+    function create_copy_button_if_supported() {
+        if(!document.queryCommandSupported('copy')) {
+            return
+        }
+
+        button = document.createElement('button')
+        button.classList.add('u-wideField')
+        button.textContent = 'Copy'
+        button.addEventListener('click', copy_url)
+
+        url_field = document.querySelector('.js-toCopy')
+        url_field.insertAdjacentElement('afterend', button)
+    }
+
+    function copy_url() {
+        // url_field.select() does not work on iOS
+        url_field.setSelectionRange(0, url_field.value.length)
+        document.execCommand('copy')
+        button.textContent = 'Copied'
+    }
+
+    document.addEventListener('DOMContentLoaded', create_copy_button_if_supported)
+})()
+</script>
 {% endblock %}
