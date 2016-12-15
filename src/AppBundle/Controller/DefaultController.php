@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 use AppBundle\Entity\Redirect;
 
@@ -34,8 +35,13 @@ class DefaultController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($redirect);
-            // FIXME Cache exception and return slug of a previously known URL
-            $em->flush();
+            try {
+                $em->flush();
+            } catch (UniqueConstraintViolationException $e) {
+                $redirect = $this->getDoctrine()
+                    ->getRepository('AppBundle:Redirect')
+                    ->findOneByUrl($redirect->getUrl());
+            }
 
             return $this->redirectToRoute('preview', array('slug' => $redirect->getSlug()));
         }
