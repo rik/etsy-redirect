@@ -12,6 +12,8 @@ use AppBundle\Entity\Redirect;
 
 class DefaultController extends Controller
 {
+    const UUID_REGEXP = '^(?i:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$';
+
     /**
      * @Route("/", name="homepage")
      */
@@ -44,7 +46,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/preview/{slug}", name="preview")
+     * @Route("/preview/{slug}", name="preview", requirements={"slug": DefaultController::UUID_REGEXP})
     */
     public function previewAction($slug)
     {
@@ -61,5 +63,33 @@ class DefaultController extends Controller
         return $this->render('default/preview.html.twig', array(
             'redirect' => $redirect,
         ));
+    }
+
+    /**
+     * @Route("/{slug}", name="redirect", requirements={"slug": DefaultController::UUID_REGEXP})
+     */
+    public function redirectAction($slug)
+    {
+        $redirect = $this->getDoctrine()
+            ->getRepository('AppBundle:Redirect')
+            ->find($slug);
+
+        if (!$redirect) {
+            throw $this->createNotFoundException(
+                'This redirection does not exist'
+            );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $sql = <<<'SQL'
+            UPDATE AppBundle\Entity\Redirect redirect
+            SET redirect.totalViews = redirect.totalViews + 1
+            WHERE redirect.slug = :slug
+SQL;
+        $query = $em->createQuery($sql);
+        $query->setParameter('slug', $redirect->getSlug());
+        $query->execute();
+
+        return $this->redirect($redirect->getUrl());
     }
 }

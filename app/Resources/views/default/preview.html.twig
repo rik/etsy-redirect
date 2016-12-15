@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ redirect.url }}
+{{ url('redirect', {'slug': redirect.slug}) }}
 {% endblock %}
