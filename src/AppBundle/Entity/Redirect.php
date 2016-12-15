@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Redirect
@@ -25,6 +26,8 @@ class Redirect
      * @var string
      *
      * @ORM\Column(name="url", type="string", length=2048, unique=true)
+     * @Assert\NotBlank(message="We need an URL to shorten")
+     * @Assert\Url()
      */
     private $url;
 
