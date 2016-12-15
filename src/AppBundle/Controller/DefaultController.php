@@ -23,7 +23,7 @@ class DefaultController extends Controller
         $redirect = new Redirect();
 
         $form = $this->createFormBuilder($redirect)
-            ->add('url', UrlType::class)
+            ->add('url', UrlType::class, array('label' => 'Paste a link to shorten it'))
             ->add('save', SubmitType::class, array('label' => 'Shorten'))
             ->getForm();
 

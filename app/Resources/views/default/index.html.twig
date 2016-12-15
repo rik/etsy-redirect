@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ form_start(form) }}
-{{ form_widget(form) }}
+{{ form_start(form, { 'attr': {'class': 'u-vCenter'} }) }}
+{{ form_label(form.url) }}
+{{ form_widget(form.url, { 'attr': {'class': 'u-wideField', 'autofocus': true} }) }}
+{{ form_widget(form.save, { 'attr': {'class': 'u-wideField'} }) }}
 {{ form_end(form) }}
 {% endblock %}

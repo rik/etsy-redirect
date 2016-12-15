@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ url('redirect', {'slug': redirect.slug}) }}
+<div class="u-vCenter">
+    <p>Here is your shortened link</p>
+    <input
+        class="u-wideField"
+        readonly
+        value="{{ url('redirect', {'slug': redirect.slug}) }}"
+    />
+</div>
 {% endblock %}
