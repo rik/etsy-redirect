@@ -11,6 +11,11 @@ $ ./bin/console server:run
 ```
 The application is now available at http://localhost:8000
 
+# Running the tests
+```shell
+$ ./vendor/bin/phpunit
+```
+
 # Notes on the implementation
 - This need a recent browser to work. JavaScript needs support for ES2015. CSS needs support for the latest flexbox specification. Although browser compatibility is important to me, I did not setup compatibility tools like Babel or Autoprefixr.
 - I've only tested on devices I own (macOS, iOS) so some features might not work on other environments. I suspect the copy to clipboard functionality might be broken in some browsers.
